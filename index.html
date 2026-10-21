@@ -44,7 +44,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
     <h1>MASH DOL Post Tracking</h1>
     <span class="meta">Last updated: 21st October 2026</span>
   </header>
-  <div class="tools"><span class="meta">Sort by</span><div class="sort" role="group" aria-label="Sort by"><button type="button" id="s-date" aria-pressed="true">Post date</button><button type="button" id="s-name" aria-pressed="false">DOL name</button></div></div>
+  <div class="tools"><span class="meta">Sort by</span><div class="sort" role="group" aria-label="Sort by"><button type="button" id="s-date" aria-pressed="true">Post date</button><button type="button" id="s-name" aria-pressed="false">DOL name</button><button type="button" id="s-src" aria-pressed="false">SNS source</button></div></div>
   <section>
     <h2>Wave 1.5 <span class="count" id="c15"></span></h2>
     <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date (expected)</th><th>URL</th></tr></thead><tbody id="w15"></tbody></table></div>
@@ -62,6 +62,7 @@ function sorted(rows,mode){
   const r=rows.map((x,i)=>[x,i]);
   r.sort((a,b)=>{
     if(mode==='name'){return a[0][0].localeCompare(b[0][0])||key(a[0][2])-key(b[0][2])||a[1]-b[1];}
+    if(mode==='src'){return a[0][1].localeCompare(b[0][1])||key(a[0][2])-key(b[0][2])||a[0][0].localeCompare(b[0][0])||a[1]-b[1];}
     return key(a[0][2])-key(b[0][2])||a[0][0].localeCompare(b[0][0])||a[1]-b[1];
   });
   return r.map(x=>x[0]);
@@ -69,7 +70,7 @@ function sorted(rows,mode){
 function render(rows,id,cid,mode){
   const tb=document.getElementById(id);tb.textContent='';let prev=null,band=false,done=0;
   for(const r of sorted(rows,mode)){
-    const g=mode==='name'?r[0]:r[2];
+    const g=mode==='name'?r[0]:mode==='src'?r[1]:r[2];
     if(g!==prev){band=!band;prev=g;}
     const tr=document.createElement('tr');if(!band)tr.className='band';
     for(const i of [0,1,2,3]){
@@ -85,10 +86,12 @@ function render(rows,id,cid,mode){
 function draw(mode){
   document.getElementById('s-date').setAttribute('aria-pressed',mode==='date');
   document.getElementById('s-name').setAttribute('aria-pressed',mode==='name');
+  document.getElementById('s-src').setAttribute('aria-pressed',mode==='src');
   render(W15,'w15','c15',mode);render(W1,'w1','c1',mode);
 }
 document.getElementById('s-date').addEventListener('click',()=>draw('date'));
 document.getElementById('s-name').addEventListener('click',()=>draw('name'));
+document.getElementById('s-src').addEventListener('click',()=>draw('src'));
 draw('date');
 </script>
 </body>
