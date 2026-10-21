@@ -5,68 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>MASH DOL Post Tracking</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
 <style>
-/* Layout: one header line, then the tracking table as the whole page */
-:root{
-  --bg:#f7f8fa; --surface:#ffffff; --band:#f0f2f5; --fg:#16202c; --muted:#5d6876; --line:#dde2e8; --accent:#0a3a7a; --link:#1554b5;
-  --sans:"Noto Sans","Noto Sans JP",system-ui,-apple-system,"Hiragino Sans",sans-serif;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#10151c; --surface:#161d26; --band:#1c2430; --fg:#e6ebf1; --muted:#9aa6b4; --line:#2b3542; --accent:#8fb4ee; --link:#8fb8ff; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#10151c; --surface:#161d26; --band:#1c2430; --fg:#e6ebf1; --muted:#9aa6b4; --line:#2b3542; --accent:#8fb4ee; --link:#8fb8ff; color-scheme:dark}
-body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:13px;line-height:1.5}
-.wrap{padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+:root{--bg:#f7f8fa;--surface:#fff;--band:#f0f2f5;--fg:#16202c;--muted:#5d6876;--line:#dde2e8;--accent:#0a3a7a;--link:#1554b5;--done:#1d7a46;
+--sans:"Noto Sans","Noto Sans JP",system-ui,-apple-system,"Hiragino Sans",sans-serif;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--bg:#10151c;--surface:#161d26;--band:#1c2430;--fg:#e6ebf1;--muted:#9aa6b4;--line:#2b3542;--accent:#8fb4ee;--link:#8fb8ff;--done:#5fcf8f;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:13px;line-height:1.5}
+.wrap{padding:28px 16px 48px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px}
-h1{margin:0;font-size:20px;font-weight:700;color:var(--accent);text-wrap:balance}
+h1{margin:0;font-size:20px;font-weight:700;color:var(--accent)}
+h2{margin:0;font-size:15px;font-weight:700;display:flex;align-items:baseline;gap:12px}
+h2 .count{font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
+section{display:flex;flex-direction:column;gap:10px}
 .meta{color:var(--muted);font-size:12px}
 .tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
-table{border-collapse:collapse;width:100%;min-width:860px}
+table{border-collapse:collapse;width:100%;min-width:760px}
 th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
-th{position:sticky;top:0;background:var(--surface);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+th{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 tr.band td{background:var(--band)}
-td.url{white-space:normal;word-break:break-all;min-width:280px;max-width:460px}
+tr:last-child td{border-bottom:0}
+td.url{white-space:normal;word-break:break-all;min-width:280px}
 td.url a{color:var(--link);text-decoration:none}
 td.url a:hover,td.url a:focus-visible{text-decoration:underline}
-td.num{font-variant-numeric:tabular-nums;text-align:right}
-th.num{text-align:right}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .pending{color:var(--muted)}
-tr:last-child td{border-bottom:0}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header>
     <h1>MASH DOL Post Tracking</h1>
     <span class="meta">Last updated: 21st October 2026</span>
   </header>
-  <div class="tbl">
-    <table>
-      <thead><tr><th>DOL name</th><th>Status of contract</th><th>Contents status</th><th>SNS source</th><th>Post date (expected)</th><th>URL</th><th class="num">Views</th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
+  <section>
+    <h2>Wave 1.5 <span class="count" id="c15"></span></h2>
+    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date (expected)</th><th>URL</th></tr></thead><tbody id="w15"></tbody></table></div>
+  </section>
+  <section>
+    <h2>Wave 1 <span class="count" id="c1"></span></h2>
+    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date</th><th>URL</th><th class="num">Views (K)</th></tr></thead><tbody id="w1"></tbody></table></div>
+  </section>
 </div>
 <script>
-const ROWS = [["Dr. Takuya Kishi", "", "", "X", "8th September 2026", "https://x.com/tkishi_cardiol/status/2097279530670989394?s=20", "16.5K"], ["Dr. Takuya Kishi", "", "", "X", "10th September 2026", "https://x.com/tkishi_cardiol/status/2098002544333340880?s=20", "15.7"], ["Dr. Takuya Kishi", "", "", "X", "15th September 2026", "https://x.com/tkishi_cardiol/status/2099814986994315352?s=20", "12.8"], ["Dr. Takuya Kishi", "", "", "X", "17th September 2026", "https://x.com/tkishi_cardiol/status/2100540518153277827?s=20", "14.1"], ["Dr. Takuya Kishi", "", "", "X", "24th September 2026", "", ""], ["Dr. Takuya Kishi", "", "", "X", "28th September 2026", "", ""], ["Dr. Atsushi Mizuno", "", "", "X", "11th September 2026", "https://x.com/atmizu/status/2098381051378737261?s=20", "26.2"], ["Dr. Atsushi Mizuno", "", "", "X", "18th September 2026", "https://x.com/atmizu/status/2100916789987492046?s=20", "10.8"], ["Dr. Atsushi Mizuno", "", "", "X", "21th September 2026", "", ""], ["Dr. Atsushi Mizuno", "", "", "X", "24th September 2026", "", ""], ["Dr. Atsushi Mizuno", "", "", "X", "26th September 2026", "", ""], ["Dr. Atsushi Mizuno", "", "", "X", "29th September 2026", "", ""], ["Dr. Kyohei Marume", "", "", "YouTube", "10th September 2026", "https://youtu.be/u1-4djghqDk?si=HwCzzyls6YKfywoy", "4.74"], ["Dr. Kyohei Marume", "", "", "YouTube", "24th September 2026", "", ""], ["Dr. Satoshi Yamamura", "", "", "YouTube Shorts", "9th September 2026", "https://www.youtube.com/shorts/mdaze7r3MA8", "5.6"], ["Dr. Satoshi Yamamura", "", "", "YouTube Shorts", "13th September 2026", "https://youtube.com/shorts/dAKAKVRwcUk?si=VQPbGUOfGOFtqms7", "6.4"], ["Dr. Satoshi Yamamura", "", "", "YouTube Shorts", "19th September 2026", "https://youtube.com/shorts/Dab8eQljlLs?si=SybOvR9A3CEEW8OJ", "18"], ["Dr. Satoshi Yamamura", "", "", "YouTube Shorts", "26th September 2026", "", ""], ["Dr. Satoshi Yamamura", "", "", "YouTube Shorts", "29th September 2026", "", ""], ["Dr. Satoshi Yamamura", "", "", "Instagram", "9th September 2026", "https://www.instagram.com/reel/DdD8Y3nBllm/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "", "", "Instagram", "12th September 2026", "https://www.instagram.com/reel/DdLrNUDojhZ/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "", "", "Instagram", "19th September 2026", "https://www.instagram.com/reel/DddsVkwB84z/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "", "", "Instagram", "26th September 2026", "", ""], ["Dr. Satoshi Yamamura", "", "", "Instagram", "29th September 2026", "", ""], ["Dr. Juji Sugioka", "", "", "YouTube", "12th September 2026", "https://www.google.com/url?q=https://www.youtube.com/watch?v%3Ddq39KK1SvXg&source=gmail&ust=1789365091286000&sa=E", "7"], ["Dr. Juji Sugioka", "", "", "YouTube Shorts", "21th September 2026", "https://youtube.com/shorts/lKEoz_iFbuM?si=u65q1VNJ-zqYOnFN", "4.2"], ["Dr. Juji Sugioka", "", "", "YouTube Shorts", "23th September 2026", "https://youtube.com/shorts/lKEoz_iFbuM?si=KNxwXa8ix7NEycC-", "3.4"], ["Dr. Juji Sugioka", "", "", "YouTube Shorts", "27th September 2026", "", ""], ["Dr. Juji Sugioka", "", "", "YouTube Shorts", "29th September 2026", "", ""], ["Dr. Maika Kitamura", "", "", "TikTok", "21st October 2026", "", ""], ["Dr. Maika Kitamura", "", "", "TikTok", "28th October 2026", "", ""], ["Dr. Maika Kitamura", "", "", "TikTok", "4th November 2026", "", ""], ["Dr. Maika Kitamura", "", "", "TikTok", "11th November 2026", "", ""], ["Dr. Maika Kitamura", "", "", "Instagram", "21st October 2026", "", ""], ["Dr. Maika Kitamura", "", "", "Instagram", "28th October 2026", "", ""], ["Dr. Maika Kitamura", "", "", "Instagram", "4th November 2026", "", ""], ["Dr. Maika Kitamura", "", "", "Instagram", "11th November 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "YouTube Shorts", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "YouTube Shorts", "10th November 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "Instagram", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "Instagram", "10th November 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "TikTok", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "", "", "TikTok", "10th November 2026", "", ""], ["Dr. Kenji Kosuge", "", "", "TikTok", "29th October 2026", "", ""], ["Dr. Kenji Kosuge", "", "", "Instagram", "29th October 2026", "", ""], ["Dr. Masayoshi Hashimoto", "", "", "YouTube", "31st October 2026", "", ""], ["Dr. Masayoshi Hashimoto", "", "", "Instagram", "2nd November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "", "", "Instagram", "5th November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "", "", "Instagram", "9th November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "", "", "Instagram", "12th November 2026", "", ""], ["Dr. Takuma I", "", "", "YouTube Shorts", "20th October 2026", "https://youtube.com/shorts/K3RJyPcjdTQ", ""], ["Dr. Takuma I", "", "", "Instagram", "20th October 2026", "https://www.instagram.com/reel/DetoZZcTMdT/", ""], ["Dr. Takuma I", "", "", "TikTok", "20th October 2026", "https://vt.tiktok.com/ZSgSs4cax/", ""], ["Dr. Atsushi Mizuno", "", "", "X", "20th October 2026", "https://x.com/atmizu/status/2112514165504102544?s=20", ""], ["Dr. Atsushi Mizuno", "", "", "X", "27th October 2026", "", ""], ["Dr. Atsushi Mizuno", "", "", "X", "10th November 2026", "", ""]];
-const tb=document.getElementById('rows');
-let prev=null, band=false;
-for(const r of ROWS){
-  if(r[0]!==prev){band=!band;prev=r[0];}
-  const tr=document.createElement('tr'); if(!band) tr.className='band';
-  r.forEach((v,i)=>{
-    const td=document.createElement('td');
-    if(i===5){td.className='url'; if(v){const a=document.createElement('a');a.href=v;a.target='_blank';a.rel='noopener';a.textContent=v;td.appendChild(a);} else {td.innerHTML='<span class="pending">—</span>';}}
-    else if(i===6){td.className='num';td.textContent=v;}
-    else td.textContent=v;
-    tr.appendChild(td);
-  });
-  tb.appendChild(tr);
+const W1=[["Dr. Takuya Kishi", "X", "8th September 2026", "https://x.com/tkishi_cardiol/status/2097279530670989394?s=20", "16.5K"], ["Dr. Takuya Kishi", "X", "10th September 2026", "https://x.com/tkishi_cardiol/status/2098002544333340880?s=20", "15.7"], ["Dr. Takuya Kishi", "X", "15th September 2026", "https://x.com/tkishi_cardiol/status/2099814986994315352?s=20", "12.8"], ["Dr. Takuya Kishi", "X", "17th September 2026", "https://x.com/tkishi_cardiol/status/2100540518153277827?s=20", "14.1"], ["Dr. Takuya Kishi", "X", "24th September 2026", "https://x.com/tkishi_cardiol/status/2103077736822546802?s=20", ""], ["Dr. Takuya Kishi", "X", "28th September 2026", "", ""], ["Dr. Atsushi Mizuno", "X", "11th September 2026", "https://x.com/atmizu/status/2098381051378737261?s=20", "26.2"], ["Dr. Atsushi Mizuno", "X", "18th September 2026", "https://x.com/atmizu/status/2100916789987492046?s=20", "10.8"], ["Dr. Atsushi Mizuno", "X", "28th September 2026", "", ""], ["Dr. Kyohei Marume", "YouTube", "10th September 2026", "https://youtu.be/u1-4djghqDk?si=HwCzzyls6YKfywoy", "4.74"], ["Dr. Kyohei Marume", "YouTube", "24th September 2026", "https://www.youtube.com/watch?v=KK91pBnT0VU", ""], ["Dr. Satoshi Yamamura", "YouTube Shorts", "9th September 2026", "https://www.youtube.com/shorts/mdaze7r3MA8", "5.6"], ["Dr. Satoshi Yamamura", "YouTube Shorts", "13th September 2026", "https://youtube.com/shorts/dAKAKVRwcUk?si=VQPbGUOfGOFtqms7", "6.4"], ["Dr. Satoshi Yamamura", "YouTube Shorts", "19th September 2026", "https://youtube.com/shorts/Dab8eQljlLs?si=SybOvR9A3CEEW8OJ", "18"], ["Dr. Satoshi Yamamura", "YouTube Shorts", "26th September 2026", "https://youtube.com/shorts/NDAFpqAX8oE?si=3k_2cT26FOYmJ3t1", ""], ["Dr. Satoshi Yamamura", "YouTube Shorts", "29th September 2026", "https://youtube.com/shorts/dAKAKVRwcUk?si=VQPbGUOfGOFtqms7", ""], ["Dr. Satoshi Yamamura", "Instagram", "9th September 2026", "https://www.instagram.com/reel/DdD8Y3nBllm/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "Instagram", "12th September 2026", "https://www.instagram.com/reel/DdLrNUDojhZ/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "Instagram", "19th September 2026", "https://www.instagram.com/reel/DddsVkwB84z/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", "3.2"], ["Dr. Satoshi Yamamura", "Instagram", "26th September 2026", "https://www.instagram.com/reel/Ddvt4VVB4vm/?utm_source=ig_web_copy_link&stkn=NTc4MTIwNjQ2YQ==", ""], ["Dr. Satoshi Yamamura", "Instagram", "29th September 2026", "https://www.instagram.com/reel/DdLrNUDojhZ/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==", ""], ["Dr. Juji Sugioka", "YouTube", "12th September 2026", "https://www.youtube.com/watch?v=dq39KK1SvXg", "7"], ["Dr. Juji Sugioka", "YouTube Shorts", "21st September 2026", "https://youtube.com/shorts/lKEoz_iFbuM?si=u65q1VNJ-zqYOnFN", "4.2"], ["Dr. Juji Sugioka", "YouTube Shorts", "23rd September 2026", "https://youtube.com/shorts/lKEoz_iFbuM?si=KNxwXa8ix7NEycC-", "3.4"], ["Dr. Juji Sugioka", "YouTube Shorts", "27th September 2026", "https://youtube.com/shorts/DoeIOUGrLXw?si=QSnfBYVaa56sMct6", ""], ["Dr. Juji Sugioka", "YouTube Shorts", "29th September 2026", "https://youtube.com/shorts/lKEoz_iFbuM?si=u65q1VNJ-zqYOnFN", ""]], W15=[["Dr. Maika Kitamura", "TikTok", "21st October 2026", "https://youtube.com/shorts/uUJvQW0oLbU?si=Ixd-qBZBwppTsPKt", ""], ["Dr. Maika Kitamura", "TikTok", "28th October 2026", "", ""], ["Dr. Maika Kitamura", "TikTok", "4th November 2026", "", ""], ["Dr. Maika Kitamura", "TikTok", "11th November 2026", "", ""], ["Dr. Maika Kitamura", "Instagram", "21st October 2026", "", ""], ["Dr. Maika Kitamura", "Instagram", "28th October 2026", "", ""], ["Dr. Maika Kitamura", "Instagram", "4th November 2026", "", ""], ["Dr. Maika Kitamura", "Instagram", "11th November 2026", "", ""], ["Dr. Shun Miyamoto", "YouTube Shorts", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "YouTube Shorts", "10th November 2026", "", ""], ["Dr. Shun Miyamoto", "Instagram", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "Instagram", "10th November 2026", "", ""], ["Dr. Shun Miyamoto", "TikTok", "27th October 2026", "", ""], ["Dr. Shun Miyamoto", "TikTok", "10th November 2026", "", ""], ["Dr. Kenji Kosuge", "TikTok", "29th October 2026", "", ""], ["Dr. Kenji Kosuge", "Instagram", "29th October 2026", "", ""], ["Dr. Masayoshi Hashimoto", "YouTube", "31st October 2026", "", ""], ["Dr. Masayoshi Hashimoto", "Instagram", "2nd November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "Instagram", "5th November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "Instagram", "9th November 2026", "", ""], ["Dr. Masayoshi Hashimoto", "Instagram", "12th November 2026", "", ""], ["Dr. Takuma I", "YouTube Shorts", "20th October 2026", "https://youtube.com/shorts/K3RJyPcjdTQ", ""], ["Dr. Takuma I", "Instagram", "20th October 2026", "https://www.instagram.com/reel/DetoZZcTMdT/", ""], ["Dr. Takuma I", "TikTok", "20th October 2026", "https://vt.tiktok.com/ZSgSs4cax/", ""], ["Dr. Atsushi Mizuno", "X", "20th October 2026", "https://x.com/atmizu/status/2112514165504102544?s=20", ""], ["Dr. Atsushi Mizuno", "X", "27th October 2026", "", ""], ["Dr. Atsushi Mizuno", "X", "10th November 2026", "", ""]];
+function render(rows,id,cid,views){
+  const tb=document.getElementById(id);let prev=null,band=false,done=0;
+  for(const r of rows){
+    if(r[0]!==prev){band=!band;prev=r[0];}
+    const tr=document.createElement('tr');if(!band)tr.className='band';
+    const cells=views?[0,1,2,3,4]:[0,1,2,3];
+    for(const i of cells){
+      const td=document.createElement('td');const v=r[i];
+      if(i===3){td.className='url';if(v){done++;const a=document.createElement('a');a.href=v;a.target='_blank';a.rel='noopener';a.textContent=v;td.appendChild(a);}else{td.innerHTML='<span class="pending">—</span>';}}
+      else if(i===4){td.className='num';td.textContent=v;}
+      else td.textContent=v;
+      tr.appendChild(td);
+    }
+    tb.appendChild(tr);
+  }
+  document.getElementById(cid).textContent=done+' / '+rows.length+' posted';
 }
+render(W15,'w15','c15',false);render(W1,'w1','c1',true);
 </script>
-
 </body>
 </html>
