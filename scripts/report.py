@@ -19,7 +19,11 @@ def main():
         urls = sorted({r[3] for r in rows if r[3]} | reported)
         json.dump(urls, open(STATE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print('initialized', len(urls)); return
+    force = os.environ.get('FORCE_TEST') == 'true'
     new = [r for r in rows if r[3] and r[3] not in reported]
+    if force:
+        new = [r for r in rows if r[3]][-2:]
+        os.environ['REPORT_MODE'] = 'test'
     if not new:
         print('no new posts'); return
 
@@ -53,6 +57,8 @@ def main():
         s.sendmail(user, to + cc + bcc, msg.as_string())
     print('sent', len(new), 'posts', 'LIVE' if live else 'TEST')
 
+    if force:
+        return
     reported |= {r[3] for r in new}
     json.dump(sorted(reported), open(STATE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
