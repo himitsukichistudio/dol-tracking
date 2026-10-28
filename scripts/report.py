@@ -34,7 +34,7 @@ def main():
             'ご確認のほど、よろしくお願いいたします。\n\n三浦')
 
     user = os.environ['GMAIL_USER']
-    live = os.environ.get('REPORT_MODE') == 'live'
+    live = os.environ.get('REPORT_MODE', '') != 'test'
     to = ['nsoe@novonordisk.com'] if live else [user]
     cc = ['hiym@novonordisk.com', 'NBKO@novonordisk.com', 'YHTS@novonordisk.com',
           'OIHM@novonordisk.com', 'EKSV@novonordisk.com', 'kafw@novonordisk.com'] if live else []
