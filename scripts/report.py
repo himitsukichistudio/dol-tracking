@@ -16,13 +16,13 @@ def main():
     rows = load_rows()
     reported = set(json.load(open(STATE, encoding='utf-8'))) if os.path.exists(STATE) else set()
     if '--init' in sys.argv:
-        urls = sorted({r[3] for r in rows if r[3]} | reported)
+        urls = sorted({r[3] for r in rows if r[3].startswith('http')} | reported)
         json.dump(urls, open(STATE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print('initialized', len(urls)); return
     force = os.environ.get('FORCE_TEST') == 'true'
-    new = [r for r in rows if r[3] and r[3] not in reported]
+    new = [r for r in rows if r[3].startswith('http') and r[3] not in reported]
     if force:
-        new = [r for r in rows if r[3]][-2:]
+        new = [r for r in rows if r[3].startswith('http')][-2:]
         os.environ['REPORT_MODE'] = 'test'
     if not new:
         print('no new posts'); return
