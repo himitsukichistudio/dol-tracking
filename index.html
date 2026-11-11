@@ -11,6 +11,8 @@
 --sans:"Noto Sans","Noto Sans JP",system-ui,-apple-system,"Hiragino Sans",sans-serif;color-scheme:light}
 @media (prefers-color-scheme: dark){:root{--bg:#10151c;--surface:#161d26;--band:#1c2430;--fg:#e6ebf1;--muted:#9aa6b4;--line:#2b3542;--accent:#8fb4ee;--link:#8fb8ff;--done:#5fcf8f;color-scheme:dark}}
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+td.memo{white-space:normal;min-width:220px;font-size:12px;color:#b45309}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:13px;line-height:1.5}
 .wrap{padding:28px 16px 48px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px}
@@ -48,11 +50,11 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
   <div class="tools"><span class="meta">Sort by</span><div class="sort" role="group" aria-label="Sort by"><button type="button" id="s-date" aria-pressed="true">Post date</button><button type="button" id="s-name" aria-pressed="false">DOL name</button><button type="button" id="s-src" aria-pressed="false">SNS source</button></div></div>
   <section>
     <h2>Wave 1.5 <span class="count" id="c15"></span></h2>
-    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date (expected)</th><th>URL</th></tr></thead><tbody id="w15"></tbody></table></div>
+    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date (expected)</th><th>URL</th><th>備考 / Notes</th></tr></thead><tbody id="w15"></tbody></table></div>
   </section>
   <section>
     <h2>Wave 1 <span class="count" id="c1"></span></h2>
-    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date</th><th>URL</th></tr></thead><tbody id="w1"></tbody></table></div>
+    <div class="tbl"><table><thead><tr><th>DOL name</th><th>SNS source</th><th>Post date</th><th>URL</th><th>備考 / Notes</th></tr></thead><tbody id="w1"></tbody></table></div>
   </section>
 </div>
 <script>
@@ -77,9 +79,10 @@ function render(rows,id,cid,mode){
     for(const i of [0,1,2,3]){
       const td=document.createElement('td');const v=r[i];
       if(i===3){td.className='url';if(v&&!/^https?:/.test(v)){const s=document.createElement('span');s.className='note';s.textContent=v;td.appendChild(s);}else if(v){done++;const a=document.createElement('a');a.href=v;a.target='_blank';a.rel='noopener';a.textContent=v;td.appendChild(a);}else{const s=document.createElement('span');s.className='pending';s.textContent='—';td.appendChild(s);}}
-      else{td.textContent=v;if(i===2&&r[5]){const s=document.createElement('span');s.className='note';s.style.fontSize='11px';s.style.display='block';s.style.maxWidth='300px';s.style.whiteSpace='normal';s.style.lineHeight='1.4';s.textContent=r[5];td.appendChild(s);}}
+      else td.textContent=v;
       tr.appendChild(td);
     }
+    const nt=document.createElement('td');nt.className='memo';nt.textContent=r[5]||'';tr.appendChild(nt);
     tb.appendChild(tr);
   }
   document.getElementById(cid).textContent=done+' / '+rows.length+' posted';
